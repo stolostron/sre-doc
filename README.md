@@ -1,9 +1,9 @@
 # SRE Doc
 
-## [alert](./alert)
+## [alert-guide](./alert-guide)
 
-Alert related doc
+Alert related guide.
 
 ## [runbook](./runbook)
 
-Alert runbooks
+Alert runbooks.
