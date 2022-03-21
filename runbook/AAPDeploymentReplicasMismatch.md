@@ -1,6 +1,3 @@
-Following this template to write a runbook via [Markdown formatting](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#ignoring-markdown-formatting):
-
-```markdown
 **Alert Name:** AAPDeploymentReplicasMismatch
 
 **Description:** AAP Deployment in ansible-automation-platform namespace actual number of replicas is inconsistent with the set number of replicas
@@ -28,20 +25,3 @@ Following this template to write a runbook via [Markdown formatting](https://doc
 **Dashboards:** n/a
 
 **Related Links:** n/a
-```
-
-## Field Definition
-
-Field | Description
-:---: | :---
-Alert Name | Alert name
-Description | Alert description
-Severity | Alert severity
-Service | Which service is belong to this alert
-Dependencies | Alert dependency
-Troubleshooting | Some steps to check and verify this alert
-Related Alerts | Some related alerts
-Root Cause | Alert root cause
-Resolution | Some steps to fix this alert according to special root cause
-Dashboard | Alert related dashboard link
-Related Links | Some links are useful for this alert
