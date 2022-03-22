@@ -1,6 +1,6 @@
-**Alert Name:** AAPPodContainerTerminated
+**Alert Name:** AAPPodNotReady
 
-**Description:** AAP Pod in ansible-automation-platform namespace has been in terminated state for longer than 10 minutes
+**Description:** AAP Pod in ansible-automation-platform namespace has been in a non-ready state for longer than 15 minutes
 
 **Severity:** critical
 
@@ -8,12 +8,11 @@
 
 **Dependencies:** n/a
 
-**Troubleshooting:** To check the AAP Pod status, the Pod status is not `Running`, it should be `CrashLoopBackOff`
+**Troubleshooting:** To check the AAP Pod status, the Pod status is not `Running`, it should be `Pending` or `Unknown` or `Failed`
 
 **Related Alerts:**
 - AAPDeploymentReplicasMismatch
 - AAPPodFrequentlyRestarting
-- AAPPodNotReady
 - AAPPodRestartingTooMuch
 
 **Root Cause:**
