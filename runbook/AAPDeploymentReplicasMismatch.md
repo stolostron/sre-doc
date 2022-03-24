@@ -2,7 +2,7 @@
 
 **Description:** AAP Deployment in ansible-automation-platform namespace actual number of replicas is inconsistent with the set number of replicas
 
-**Severity:** warning
+**Severity:** critical
 
 **Service:** Ansible Automation Platform
 
@@ -11,7 +11,9 @@
 **Troubleshooting:** To check the AAP Deployment status, the actual number of replicas is not equal to the set number of replicas
 
 **Related Alerts:**
+- AAPPodFrequentlyRestarting
 - AAPPodNotReady
+- AAPPodRestartingTooMuch
 
 **Root Cause:**
 1. Can not create the Pod due to the Service Account is not exist
