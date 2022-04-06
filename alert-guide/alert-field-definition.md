@@ -12,7 +12,7 @@ Following this template to define an alert:
     team: acm-sre
     cluster: cluster1
     service: service1
-    runbook: https://github.com/stolostron/sre-doc/blob/main/runbook/InstanceDown.md
+    runbook_url: https://github.com/stolostron/sre-doc/blob/main/runbook/InstanceDown.md
     namespace: ns1
     pod: pod1
     container: c1
@@ -30,7 +30,7 @@ labels.severity | y |<br> info <br> warning <br> critical |<br> info: alerts as 
 labels.team | y | n/a | for example: [acm-sre, aap-sre, acm-aap-sre]
 labels.cluster | y | n/a | which cluster firing this alert
 labels.service | y | n/a | which service is belong to this alert
-label.runbook | y | n/a | for example: https://github.com/stolostron/sre-doc/blob/main/runbook/InstanceDown.md
+label.runbook_url | y | n/a | for example: https://github.com/stolostron/sre-doc/blob/main/runbook/InstanceDown.md
 labels.namespace | n | n/a | which namespace is the service belongs to
 labels.pod | n | n/a | which pod is the service belongs to
 labels.container  | n | n/a | which container is the service running on
