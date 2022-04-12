@@ -8,6 +8,10 @@ Alert related guide.
 
 ## [Runbooks](./runbooks/)
 
+- [OpenShift Runbooks](https://github.com/openshift/runbooks)
+- [OpenShift Online Runbooks](https://github.com/openshift/ops-sop/tree/master/v4/alerts)
+- [Prometheus Operator Ecosystem Runbooks](https://github.com/prometheus-operator/runbooks/tree/main/content/runbooks)
+
 ### Ansible Automation Platform
 
 To add a new runbook for Ansible Automation Platform alert, please follow [Ansible Automation Platform runbook template](./runbooks/ansible-automation-platform-operator/runbook-template.md) to create it.
