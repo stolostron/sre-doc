@@ -1,10 +1,12 @@
 # SRE Doc
 
-## [Alert Guide](./alert-guide)
+## [Guides](./guides)
 
-Alert related guide.
+Some useful guides for SRE team.
 
-- [Alert Template](./alert-guide/alert-field-definition.md) - Follow this template to define a new alert
+## [Tools](./tools)
+
+Some useful tools for SRE team.
 
 ## [Runbooks](./runbooks/)
 
