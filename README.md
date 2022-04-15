@@ -4,10 +4,6 @@
 
 Some useful guides for SRE team.
 
-## [Tools](./tools)
-
-Some useful tools for SRE team.
-
 ## [Runbooks](./runbooks/)
 
 - [OpenShift Runbooks](https://github.com/openshift/runbooks)
