@@ -15,13 +15,13 @@ $ awx login --conf.host https://app-controller.com/ --conf.username $USERNAME --
 - Export the workloads from AAP:
 
 ```
-$ awx export --conf.host https://app-controller.com/ --conf.username $USERNAME --conf.password $PASSWORD > workloads.json
+$ awx export --conf.host https://app-controller.com/ --conf.username $USERNAME --conf.password $PASSWORD > resource.json
 ```
 
-- Import the workloads to AAP:
+- Import the workloads to another AAP:
 
 ```
-$ awx import < workloads.json --conf.host https://app-controller.com/ --conf.username $USERNAME --conf.password $PASSWORD
+$ awx import < resource.json --conf.host https://app-controller.com/ --conf.username $USERNAME --conf.password $PASSWORD
 ```
 
 ## Links
