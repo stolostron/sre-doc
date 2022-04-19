@@ -21,6 +21,10 @@ To add a new runbook for the alert, please follow [OpenShift runbook template](h
 - [AAPPodRestartingTooMuch](./runbooks/ansible-automation-platform-operator/AAPPodRestartingTooMuch.md)
 - [AAPStatefulSetReplicasMismatch](./runbooks/ansible-automation-platform-operator/AAPStatefulSetReplicasMismatch.md)
 
+### Advanced Cluster Management
+
+- [PolicyNotCompliant](./runbooks/advanced-cluster-management/PolicyNotCompliant.md)
+
 ### OpenShift
 
 - [AlertmanagerClusterFailedToSendAlerts](https://github.com/openshift/ops-sop/blob/master/v4/alerts/AlertmanagerClusterFailedToSendAlerts.md)
