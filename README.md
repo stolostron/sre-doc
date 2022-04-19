@@ -6,13 +6,13 @@ Some useful guides for SRE team.
 
 ## [Runbooks](./runbooks/)
 
+To add a new runbook for the alert, please follow [OpenShift runbook template](https://github.com/openshift/runbooks/blob/master/example.md) to create it.
+
 - [OpenShift Runbooks](https://github.com/openshift/runbooks)
 - [OpenShift Online Runbooks](https://github.com/openshift/ops-sop/tree/master/v4/alerts)
 - [Prometheus Operator Ecosystem Runbooks](https://github.com/prometheus-operator/runbooks/tree/main/content/runbooks)
 
 ### Ansible Automation Platform
-
-To add a new runbook for Ansible Automation Platform alert, please follow [Ansible Automation Platform runbook template](./runbooks/ansible-automation-platform-operator/runbook-template.md) to create it.
 
 - [AAPDeploymentReplicasMismatch](./runbooks/ansible-automation-platform-operator/AAPDeploymentReplicasMismatch.md)
 - [AAPPodContainerTerminated](./runbooks/ansible-automation-platform-operator/AAPPodContainerTerminated.md)
@@ -22,8 +22,6 @@ To add a new runbook for Ansible Automation Platform alert, please follow [Ansib
 - [AAPStatefulSetReplicasMismatch](./runbooks/ansible-automation-platform-operator/AAPStatefulSetReplicasMismatch.md)
 
 ### OpenShift
-
-To add a new runbook for OpenShift alert, please follow [OpenShift runbook template](https://github.com/openshift/runbooks/blob/master/example.md) to create it.
 
 - [AlertmanagerClusterFailedToSendAlerts](https://github.com/openshift/ops-sop/blob/master/v4/alerts/AlertmanagerClusterFailedToSendAlerts.md)
 - [AlertmanagerFailedReload](https://github.com/openshift/runbooks/blob/master/alerts/cluster-monitoring-operator/AlertmanagerFailedReload.md)

@@ -1,29 +1,17 @@
-**Alert Name:** AAPDeploymentReplicasMismatch
+# AAPDeploymentReplicasMismatch
 
-**Description:** AAP Deployment in ansible-automation-platform namespace actual number of replicas is inconsistent with the set number of replicas
+## Meaning
 
-**Severity:** critical
+AAP Deployment in ansible-automation-platform namespace actual number of replicas is inconsistent with the set number of replicas.
 
-**Service:** Ansible Automation Platform
+## Impact
 
-**Dependencies:** n/a
+The actual number of replicas is inconsistent with the set number of replicas which means we have some Pod is terminated. AAP service performance is usually degrading.
 
-**Troubleshooting:** To check the AAP Deployment status, the actual number of replicas is not equal to the set number of replicas
+## Diagnosis
 
-**Related Alerts:**
-- AAPPodFrequentlyRestarting
-- AAPPodNotReady
-- AAPPodRestartingTooMuch
+To check the AAP Pod status, the Pod status is not `Running`, it should be `Pending` or `Unknown` or `Failed`, and check the AAP pod log if we can find some reason.
 
-**Root Cause:**
-1. Can not create the Pod due to the Service Account is not exist
+## Mitigation
 
-**Resolution:**
-- Root Cause 1
-    - Step 1: Log in to the managed cluster
-    - Step 2: Create the Service Account for the Deployment
-    - Step 3: Check the Deployment status to ensure that the actual number of replicas is consistent with the set number of replicas
-
-**Dashboards:** n/a
-
-**Related Links:** n/a
+The resolution depends on the particular issue reported in the logs.
