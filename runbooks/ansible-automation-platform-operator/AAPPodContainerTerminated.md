@@ -22,8 +22,8 @@ django.db.utils.InternalError: cannot execute UPDATE in a read-only transaction
 ```
 Then we can follow these steps to resolve this issue:
 
-1. Identify the issue due to disk space. Navigate to the Postgres database then click the monitoring tab and check the storage ( should be near 100% )
-2. Navigate to the UI and raise the storage ( can only be doubled )
+1. Identify the issue due to disk space. Navigate to the Postgres database then click the monitoring tab and check the storage ( should be near 100% ).
+2. Navigate to the UI and raise the storage ( can only be doubled ).
 
 ## Mitigation
 

@@ -2,7 +2,7 @@
 
 ## Meaning
 
-AAP StatefulSet in ansible-automation-platform namespace actual number of replicas is inconsistent with the set number of replicas over 5 minutes
+AAP StatefulSet in ansible-automation-platform namespace actual number of replicas is inconsistent with the set number of replicas over 5 minutes.
 
 ## Impact
 

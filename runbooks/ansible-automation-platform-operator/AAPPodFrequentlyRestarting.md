@@ -2,7 +2,7 @@
 
 ## Meaning
 
-AAP Pod in ansible-automation-platform namespace is restarting many times over 2 minutes
+AAP Pod in ansible-automation-platform namespace is restarting many times over 2 minutes.
 
 ## Impact
 
