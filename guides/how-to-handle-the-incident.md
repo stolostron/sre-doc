@@ -8,7 +8,7 @@ You can find all runbooks from [doc repo](https://github.com/stolostron/sre-doc)
 
 ## 2) Create the issue to trace the incident
 
-You should create an issue on Jira to trace the incident.
+You should create an issue on Jira to trace the incident, please add the `acm-sre` label to the issue.
 
 ## 3) Write an incident report
 
