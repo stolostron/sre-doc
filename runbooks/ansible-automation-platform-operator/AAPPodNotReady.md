@@ -1,32 +1,30 @@
-**Alert Name:** AAPPodNotReady
+# AAPPodNotReady
 
-**Description:** AAP Pod in ansible-automation-platform namespace has been in a non-ready state for longer than 15 minutes
+## Meaning
 
-**Severity:** critical
+AAP Pod in ansible-automation-platform namespace has been in a non-ready state for longer than 15 minutes.
 
-**Service:** Ansible Automation Platform
+## Impact
 
-**Dependencies:** n/a
+AAP Pod is not ready which means AAP service performance is usually degrading.
 
-**Troubleshooting:** To check the AAP Pod status, the Pod status is not `Running`, it should be `Pending` or `Unknown` or `Failed`
+## Diagnosis
 
-**Related Alerts:**
-- AAPDeploymentReplicasMismatch
-- AAPPodFrequentlyRestarting
-- AAPPodRestartingTooMuch
+To check the AAP Pod status, the Pod status is not `Running`, it should be `Pending` or `Unknown` or `Failed`, and check the AAP pod log if we can find some reason.
 
-**Root Cause:**
-1. Database is full, so write is blocked. We will found the following error log from automation-hub-worker Pod:
+### Database is full 
+
+We will find the following error log from automation-hub-worker Pod:
+
 ```
 psycopg2.errors.ReadOnlySqlTransaction: cannot execute UPDATE in a read-only transaction
 django.db.utils.InternalError: cannot execute UPDATE in a read-only transaction
 ```
+Then we can follow these steps to resolve this issue:
 
-**Resolution:**
-- Root Cause 1
-    - Step 1: Identify issue is due to disk space. Navigate to the Postgres database then click the monitoring tab and check the storage(should be near 100%)
-    - Step 2: Navigate to the UI and raise the storage(can only be doubled)
+1. Identify the issue due to disk space. Navigate to the Postgres database then click the monitoring tab and check the storage ( should be near 100% )
+2. Navigate to the UI and raise the storage ( can only be doubled )
 
-**Dashboards:** n/a
+## Mitigation
 
-**Related Links:** n/a
+The resolution depends on the particular issue reported in the logs.

@@ -1,26 +1,17 @@
-**Alert Name:** AAPPodRestartingTooMuch
+# AAPPodRestartingTooMuch
 
-**Description:** AAP Pod in ansible-automation-platform namespace restart more than 10 times over 10 minutes
+## Meaning
 
-**Severity:** warning
+AAP Pod in ansible-automation-platform namespace restart more than 10 times over 10 minutes.
 
-**Service:** Ansible Automation Platform
+## Impact
 
-**Dependencies:** n/a
+The AAP Pod restarts too much which means we have some Pod that is going wrong. AAP service performance is usually degrading.
 
-**Troubleshooting:** To check the AAP Pod `RESTARTS` filed and events, it should have the reason for the Pod restarting
+## Diagnosis
 
-**Related Alerts:**
-- AAPDeploymentReplicasMismatch
-- AAPPodFrequentlyRestarting
-- AAPPodNotReady
+To check the AAP Pod `RESTARTS` field and events, it should have the reason for the Pod restarting, and check the AAP pod log if we can find some reason.
 
-**Root Cause:**
-1. 
+## Mitigation
 
-**Resolution:**
-- Root Cause 1
-
-**Dashboards:** n/a
-
-**Related Links:** n/a
+The resolution depends on the particular issue reported in the logs.
