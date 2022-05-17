@@ -23,6 +23,7 @@ To add a new runbook for the alert, please follow [OpenShift runbook template](h
 
 ### Advanced Cluster Management
 
+- [MetricsCollectorMissing](./runbooks/advanced-cluster-management/MetricsCollectorMissing.md)
 - [PolicyNotCompliant](./runbooks/advanced-cluster-management/PolicyNotCompliant.md)
 
 ### OpenShift
