@@ -6,7 +6,9 @@ The policy is not compliant for longer than 5 minutes.
 
 ## Impact
 
-We have some violations of the policy in the cluster.
+We have some violations of the policy deployed in the hub.
+
+Note that the impacted cluster may be wrongly reported as the ``local cluster`` due to a limitation in the current exposed metrics. The impacted clusters (so those that have a not compliant policy) can be determined by checking the following section.
 
 ## Diagnosis
 
