@@ -14,7 +14,7 @@ Note that the impacted cluster may be wrongly reported as the ``local cluster`` 
 
 To login to the ACM console and check the policy status, you can find the reason, for example：
 
-![](/images/PolicyNotCompliant.png)
+![](/images/policy-status.png)
 
 You can also find the reason from the command line:
 
