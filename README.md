@@ -15,6 +15,7 @@ To add a new runbook for the alert, please follow [OpenShift runbook template](h
 ### Ansible Automation Platform
 
 - [AAPDeploymentReplicasMismatch](./runbooks/ansible-automation-platform-operator/AAPDeploymentReplicasMismatch.md)
+- [AAPMetricEndpointDown](./runbooks/ansible-automation-platform-operator/AAPMetricEndpointDown.md)
 - [AAPPodContainerTerminated](./runbooks/ansible-automation-platform-operator/AAPPodContainerTerminated.md)
 - [AAPPodFrequentlyRestarting](./runbooks/ansible-automation-platform-operator/AAPPodFrequentlyRestarting.md)
 - [AAPPodNotReady](./runbooks/ansible-automation-platform-operator/AAPPodNotReady.md)
