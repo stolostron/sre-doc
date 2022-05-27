@@ -27,7 +27,7 @@ name | y | n/a | [valid alert name](https://prometheus.io/docs/concepts/data_mod
 annotations.summary | y | n/a | alert summary
 annotations.description | y | n/a | alert description
 labels.severity | y |<br> info <br> warning <br> critical |<br> info: alerts as records, it is a low erverity  <br> warning: alerts as notification, it is a warning erverity  <br> critical: the urgent alert, need on-call SRE to handle it
-labels.team | y | n/a | for example: [acm-sre, aap-sre, acm-aap-sre]
+labels.team | y | n/a | for example: [acm-sre, aoc-sre]
 labels.cluster | y | n/a | which cluster firing this alert
 labels.service | y | n/a | which service is belong to this alert
 label.runbook_url | y | n/a | for example: https://github.com/stolostron/sre-doc/blob/main/runbook/InstanceDown.md
