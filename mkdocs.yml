@@ -1,0 +1,49 @@
+site_name: sre-doc
+theme:
+  name: material
+  features:
+  - navigation.tabs
+  - navigation.indexes
+  - content.code.annotate
+  - search.suggest
+  - search.highlight
+  icon:
+    admonition:
+      alert: octicons/alert-24
+      note: octicons/checklist-24
+      abstract: octicons/checklist-16
+      info: octicons/info-16
+      tip: octicons/squirrel-24
+      success: octicons/check-16
+      question: octicons/question-16
+      warning: octicons/alert-16
+      failure: octicons/x-circle-16
+      danger: octicons/zap-16
+      bug: octicons/bug-16
+      example: octicons/beaker-16
+      quote: octicons/quote-16
+plugins:
+- search
+- mermaid2
+docs_dir: docs
+repo_url: https://github.com/stolostron/sre-doc
+edit_uri: edit/main/docs
+repo_name: stolostron/sre-doc
+markdown_extensions:
+- toc:
+    toc_depth: "2-5"
+- attr_list:
+- pymdownx.highlight
+- pymdownx.inlinehilite
+- pymdownx.superfences:
+    # make exceptions to highlighting of code:
+    custom_fences:
+    - name: mermaid
+      class: mermaid
+      format: !!python/name:mermaid2.fence_mermaid
+- pymdownx.snippets
+- admonition
+- pymdownx.details
+- pymdownx.tabbed:
+    alternate_style: true
+- pymdownx.critic
