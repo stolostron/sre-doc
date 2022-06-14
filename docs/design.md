@@ -1,6 +1,6 @@
 # Design Descisions
 
-Reference: [https://www.redhat.com/en/blog/how-does-red-hat-support-day-2-operations](https://www.redhat.com/en/blog/how-does-red-hat-support-day-2-operations)
+Preface: [https://www.redhat.com/en/blog/how-does-red-hat-support-day-2-operations](https://www.redhat.com/en/blog/how-does-red-hat-support-day-2-operations)
 
 ## Day 0 Operations
 
@@ -20,7 +20,7 @@ Reference: [https://www.redhat.com/en/blog/how-does-red-hat-support-day-2-operat
 #### Project: KCP
 
 - This project leverages an existing RHACM infrastructure to deploy the public OCP clusters into which we will deploy the RHACM instance to support the project. The initial OCP clusters are detached from the infrastrucutre RHACM.
-- THe deployment of RHACM into OCP clusters will be managed by Openshift Pipelines.
+- The deployment of RHACM into OCP clusters will be managed by Openshift Pipelines.
 - Openshift Pipeline will deploy Openshift Gitops, and similar to the AOC project, we will use Argocd to handle the rollout of ACM and ACM configuration.
 
 #### Commonailty across all RHACM deployments
@@ -64,15 +64,20 @@ graph LR
 
 ### Importing AKS Clusters
 
-AKS clusters are imported into the ACM hub as a Day 2 operation based on an ansible playbook.
-The idempontent playbook is run against an inventory of AKS clusters.
+AKS clusters are imported into the ACM hub as a Day 2 operation using an ansible playbook.
+The playbook is idempotent and runs against an inventory of AKS clusters. The inventory is dyanmic, where targets can be added and removed. In this way, a single playbook can be used against inventories from different stages--dev and production, or different regions.
 
 The following tasks are performed on each cluster:
 
-1. Setup network to allow the AKS cluster to see the ACM hub
-2. Setup networking to allow the AAP cluster to access the k8s endpoint.
-3. Generate the ManageCluster CR
-4. Read the generated import secret, and apply these on the AKS cluster.
+1. Setup networking to allow the AKS cluster to access the ACM k8s endpoint.
+2. Setup networking to allow the AAP cluster to access the AKS k8s endpoint.
+3. Generate the ManageCluster CR on the ACM hub.
+4. Read and apply the generated import secret on the AKS cluster.
+
+!!! reference
+
+    See details at [8.2. Importing a managed cluster with the CLI](https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.0/html/manage_cluster/importing-a-target-managed-cluster-to-the-hub-cluster#importing-a-managed-cluster-with-the-cli)
+
 
 As new AKS clusters come online, the ansible playbook running on a schedule will iterate over the inventory of clusters and import the clusters into ACM. 
 
@@ -80,13 +85,14 @@ As new AKS clusters come online, the ansible playbook running on a schedule will
 
     If it takes 5m to run the import playbook from start to end for a single AKS cluster, then iterating over 100 AKS clusters, will take 500m or 8.3 hours, as a rough estimate. Enabling parallism will reduce the total time.
 
+Currently, the import procedure follows the out of the box import procedure, using a Service Account with cluster-admin rolebinding to generate the managed cluster namespace, and create the Managed Cluster CR. The best practice is always to use the mininal privilege as possible, so we question, if customers in general are ok with using a cluster-admin role to import all their clusters.
 
-An alternative import procedure is available, that uses a generic import payload to be applied on the AKS cluster. This requires the ACM hub to be configured to generate a generic payload. Using this procedure will simplify the import procedure by not having to access the ACM hub cluster during the import procedure. We would just need to access the target cluster. This will still be a Day 2 operation.
+An alternative import procedure is available, that uses a generic import payload to be applied on the AKS cluster, and a service account with minimal privledge. This requires the ACM hub to be configured to generate a generic payload. Using this procedure will simplify the import procedure by not having to access the ACM hub cluster during the import procedure. We would just need to access the target cluster. This alternative process will still be a Day 2 operation.
 
 
 ### Backup and Restore | Disaster Recovery
 
-Stuff
+TBD
 
 ### Upgrade - OCP
 
@@ -107,25 +113,41 @@ We are following the following OCP upgrade policy:
 - Development stage is upgraded first.
 - Production(s) stage is upgraded next.
 
-Manual procedure for upgrading RHACM 2.4 to RHACM 2.5:
+#### Gitops procedure for upgrading RHACM 2.4 to RHACM 2.5
 
-1. Ensure there is a OADP backup of RHACM
-2. Disable the backup and restore capability in the multiclusterhub operand
-3. Disable the clusterproxy capability in the multiclusterhub operand (See bz: )
+There is a known blocker [issue](https://bugzilla.redhat.com/show_bug.cgi?id=2095195) for upgrading RHACM from 2.4 to 2.5 when the cluster proxy addon is enabled. Before upgrading from 2.4 to 2.5 we also need to disable the backup feature. 
 
-```bash
-oc patch
+The following steps includes the workaround to allow the upgrade with Gitops.
+
+1. Create PR update MultiClusterHub CR to disable proxy addon
+```yaml
+spec:
+ enableClusterProxyAddon: false
 ```
-
-4. Change the RHACM subacription channel to `release-2.5`.
-5. Select the version and apply to upgrade.
-
-#### Gitops procedure for upgrading RHACM 2.4 to RHACM 2.5:
+2. Create PR to update ACM subscription
+```yaml
+spec:
+ channel: release-2.5
+ installPlanApproval: Manual
+ name: advanced-cluster-management
+ source: redhat-operators
+ sourceNamespace: openshift-marketplace
+```
+3. Login to the OCP console to review and approve the install plan for release 2.5 upgrade.
+4. After the RHACM 2.5 upgrade completes successfully, create PR to update MultiClusterHub CR to re-enable the cluster proxy addon.
+```yaml
+spec:
+ enableClusterProxyAddon: true
+```
+5. Manually delete the secret cluster-proxy-signer and let cluster-proxy-addon-manager to refresh it. 
+```bash
+oc delete secret cluster-proxy-signer -n open-cluster-management
+```
 
 ### Alerts and Alert Management
 
-Stuff
+TBD
 
 ### Observability
 
-Stuff
+TBD
