@@ -8,20 +8,31 @@ Preface: [https://www.redhat.com/en/blog/how-does-red-hat-support-day-2-operatio
 
 #### Project: AOC
 
-- We use a multiple github repository to allow us to deploy and operatoe RHACM.
+- We use a multiple github repository to allow us to deploy and operate RHACM.
 - For application and configuration data, we define kustomization overlays to cover each distinct deployment targets. Targets make up different stage environments or different region environments.
 - We use Ansible Automation Platform to trigger Ansible Playbooks to build the infrastructure that make up the management components. This includes the ansible playbook to deploy OCP as a private cluster on Azure. We also define ansible playbooks to import AKS clusters into ACM. We need to support multiple ACM deployments across multiple regions.
 - To limit costs, We support a two stage deployment workflow: development and production. Developers are still able to deploy sandbox environments, using an internal RHACM infrastructure cluster, with has support for cluster pools.
 - We develop in the cloud.
 - For the AOC project we use gitops with Openshift Gitops to deploy RHACM workload and configuration data. The image below is a sample the current set of ArgoCD applications we have defined.
 
-[![Image 0](https://cdoan1.github.io/static-site-starter-src/images/acm_24_argocd_applications.png)](./images/acm_24_argocd_applications.png)
+[![Image 0](https://stolostron.github.io/sre-doc/images/acm_24_argocd_applications.png)](./images/acm_24_argocd_applications.png)
 
 #### Project: KCP
 
+- The source of the configuration for this cluster is held in the [Openshift-pipelines](https://github.com/stolostron/openshift-pipelines/tree/main/kcp-sgs-pipelines) repository, directly in the `kcp-sgs-pipelines` directory. The source for [autoscale hypershift](https://github.com/stolostron/openshift-pipelines/tree/main/autoscale-hypershift) is also held in this repository in the `autoscale-hypershift` directory.
 - This project leverages an existing RHACM infrastructure to deploy the public OCP clusters into which we will deploy the RHACM instance to support the project. The initial OCP clusters are detached from the infrastrucutre RHACM.
 - The deployment of RHACM into OCP clusters will be managed by Openshift Pipelines.
-- Openshift Pipeline will deploy Openshift Gitops, and similar to the AOC project, we will use Argocd to handle the rollout of ACM and ACM configuration.
+- Openshift Pipeline will deploy Openshift Gitops, and similar to the AOC project, we will use Argocd to handle the rollout of ACM, the ACM configuration, the Singapore controller, and cluster registration controller.
+- Once RHACM is successfully installed, the pipeline will configure HyperShift on the local cluster, converting the local cluster managedcluster into a HyperShift Hosting Cluster.
+- The KCP cluster will be configured with 3 HyperShiftDeployments on its localcluster hosting cluster, 1 Azure and 1 AWS HyperShiftDeployment are configured to target KCP Stable, whereas the last AWS HyperShiftDeployment is configured to target KCP unstable.
+- Autoscale HyperShift is deployed on this cluster as well, to ensure that HyperShiftDeployments are scaled up/down automatically on a preexisting schedule to aid in cost savings efforts. As of now, HyperShiftDeployments will scale down every Friday at Midnight, and scale up every Monday at 1 AM.
+    - A label of `autoscale-hypershift=skip` can be added to the HyperShiftDeployment to ensure it is not affected by the automated scaling
+    - When scaling down, autoscaling is turned off and the replicaCount is set to 1
+    - When scaling up, autoscaling is turned on and the minimum replicas is set to 2 and max to 5
+- Observability is installed on this cluster and AlertManager is configured to forward warning and critical alerts to slack and GitHub. PagerDuty will alert on critical alerts as well.
+![Observability Dashboard(https://stolostron.github.io/sre-doc/images/kcp_dashboard_screenshot.png)](./images/kcp_dashboard_screenshot.png)
+  
+
 
 #### Commonailty across all RHACM deployments
 
