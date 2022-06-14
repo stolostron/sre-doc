@@ -136,8 +136,36 @@ spec:
 3. Login to the OCP console to review and approve the install plan for release 2.5 upgrade.
 4. After the RHACM 2.5 upgrade completes successfully, create PR to update MultiClusterHub CR to re-enable the cluster proxy addon.
 ```yaml
+apiVersion: operator.open-cluster-management.io/v1
+kind: MultiClusterHub
+metadata:
+  name: multiclusterhub
+  namespace: open-cluster-management
 spec:
- enableClusterProxyAddon: true
+  overrides:
+    components:
+      - enabled: true
+        name: cluster-proxy-addon
+      - enabled: true	
+        name: multiclusterhub-repo	
+      - enabled: true	
+        name: search	
+      - enabled: true	
+        name: management-ingress	
+      - enabled: true	
+        name: console	
+      - enabled: true	
+        name: insights	
+      - enabled: true	
+        name: grc	
+      - enabled: true	
+        name: cluster-lifecycle	
+      - enabled: true	
+        name: volsync	
+      - enabled: true	
+        name: multicluster-engine	
+      - enabled: false	
+        name: cluster-backup
 ```
 5. Manually delete the secret cluster-proxy-signer and let cluster-proxy-addon-manager to refresh it. 
 ```bash
