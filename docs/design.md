@@ -1,4 +1,4 @@
-# Design Descisions
+# Design Decisions
 
 Preface: [https://www.redhat.com/en/blog/how-does-red-hat-support-day-2-operations](https://www.redhat.com/en/blog/how-does-red-hat-support-day-2-operations)
 
@@ -33,8 +33,7 @@ Preface: [https://www.redhat.com/en/blog/how-does-red-hat-support-day-2-operatio
 ![Observability Dashboard(https://stolostron.github.io/sre-doc/images/kcp_dashboard_screenshot.png)](./images/kcp_dashboard_screenshot.png)
   
 
-
-#### Commonailty across all RHACM deployments
+#### Commonality across all RHACM deployments
 
 ### Planning - Sizing
 
@@ -43,12 +42,18 @@ Preface: [https://www.redhat.com/en/blog/how-does-red-hat-support-day-2-operatio
 - Currently, we support AKS cluster deployed across the NA region. A single ACM hub cluster will be available to import and manage all the AKS clusters in the North America region.
 - The EMEA region will consist of Europe, Middle East, and Africa countries.
 
+### DNS Setup
+TODO
+
 ## Day 1 Operations
 
 ### New Environment Deployments
 
-- The ansible project https://github.com/rcarrata/ocp4-azure-ipi was forked to https://github.com/stolostron/ocp4-azure-ipi and is used to deploy OCP clusters. Red Hat Ansibile Automation Platform is used to perform the Day 1 deployment of the Openshift Clusters.
-- An ansible playbook from REPO is used to bootstrap the Openshift Gitops. Openshift Gitops handles rolling out and maintain the set of application and configuration to the ACM hub cluster, or local cluster.
+- The Ansible project [ocp4-azure-ipi](https://github.com/rcarrata/ocp4-azure-ipi) was [forked](https://github.com/stolostron/ocp4-azure-ipi) and is used to deploy OCP clusters. Red Hat Ansibile Automation Platform is used to perform the Day 1 deployment of the Openshift Clusters.
+- A series of Ansible playbooks from [acm-aap-aas-operations](https://github.com/stolostron/acm-aap-aas-operations) are used to:
+  - configure the Bastion VM
+  - Setup DNS configuration
+  - bootstrap the Openshift Gitops. Openshift Gitops handles rolling out and maintain the set of application and configuration to the ACM hub cluster, or local cluster.
 - ACM policy is used for maintain configuration across the fleet of managed clusters.
 
 Project: AOC
@@ -56,6 +61,7 @@ Project: AOC
 ```mermaid
 graph LR
     AAP --> |OCP IPI| OCP
+    AAP --> |Bastion/DNS setup| OCP[OCP & RHACM]
     AAP --> |Openshift GitOps| OCP[OCP & RHACM]
     OCP --> |ArgoCD - Application & Configuration| OCP
     OCP --> |Policy| FLEET
@@ -69,7 +75,6 @@ graph LR
     OCP --> |ArgoCD - Application & Configuration| OCP
     OCP --> |Policy| FLEET
 ```
-
 
 ## Day 2 Operations
 
@@ -87,7 +92,7 @@ The following tasks are performed on each cluster:
 
 !!! reference
 
-    See details at [8.2. Importing a managed cluster with the CLI](https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.0/html/manage_cluster/importing-a-target-managed-cluster-to-the-hub-cluster#importing-a-managed-cluster-with-the-cli)
+    See details at [1.8.2. Importing a managed cluster with the CLI](https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.5/html/clusters/managing-your-clusters#importing-a-managed-cluster-with-the-cli)
 
 
 As new AKS clusters come online, the ansible playbook running on a schedule will iterate over the inventory of clusters and import the clusters into ACM. 
@@ -110,12 +115,17 @@ TBD
 We are following the following OCP upgrade policy:
 
 - The ACM SRE maintenance window is between Sunday night (CST) and Wednesday morning (CST).
+- We are following OpenShift **stable** upgrade channel
 - OCP minor version release upgrades will happen during this window. 
     - We will deploy the latest version, weekly.
 - OCP major version release upgrades will happen during this window.
     - We will upgrade to the next release, 1 week after it is available.
 - Development stage is upgraded first.
 - Production(s) stage is upgraded next.
+
+#### Gitops procedure for upgrading OCP
+
+This is driven by an ACM Policy that applies the expected ClusterVesion Custom Resource. <Add link>
 
 ### Upgrade - ACM
 

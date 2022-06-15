@@ -1,4 +1,5 @@
 # SRE Doc
+[Design wiki](https://stolostron.github.io/sre-doc)
 
 ## [Guides](./guides)
 
