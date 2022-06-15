@@ -43,7 +43,20 @@ Preface: [https://www.redhat.com/en/blog/how-does-red-hat-support-day-2-operatio
 - The EMEA region will consist of Europe, Middle East, and Africa countries.
 
 ### DNS Setup
-TODO
+#### Project: AOC
+The basic deployment of the OCP platform hosting the hub is private, including the DNS setup.
+
+On top of that, we add a Public DNS zone containing:
+- record pointing to the public IP of the bastion VM
+- record pointing to the private IP of the Load Balancer frontend IPs for api and *.apps
+
+This is used for certificate validaiton purpose and to avoid the need to go through the bastion also for the DNS traffic.
+
+The expected domain name is:
+<api|*.apps>.<hubname>.<AOC base domain>
+where AOC base domain can be:
+- na.mgmtdev.ansiblecloud.com -> Development deployment in NA region
+- emea.mgmt.ansiblecloud.com -> Production deployment in EMEA region
 
 ## Day 1 Operations
 
@@ -52,12 +65,11 @@ TODO
 - The Ansible project [ocp4-azure-ipi](https://github.com/rcarrata/ocp4-azure-ipi) was [forked](https://github.com/stolostron/ocp4-azure-ipi) and is used to deploy OCP clusters. Red Hat Ansibile Automation Platform is used to perform the Day 1 deployment of the Openshift Clusters.
 - A series of Ansible playbooks from [acm-aap-aas-operations](https://github.com/stolostron/acm-aap-aas-operations) are used to:
   - configure the Bastion VM
-  - Setup DNS configuration
+  - setup Public DNS configuration
   - bootstrap the Openshift Gitops. Openshift Gitops handles rolling out and maintain the set of application and configuration to the ACM hub cluster, or local cluster.
 - ACM policy is used for maintain configuration across the fleet of managed clusters.
 
-Project: AOC
-
+#### Project: AOC
 ```mermaid
 graph LR
     AAP --> |OCP IPI| OCP
@@ -67,7 +79,7 @@ graph LR
     OCP --> |Policy| FLEET
 ```
 
-Project: KCP
+#### Project: KCP
 ```mermaid
 graph LR
     RHACM[RHACM*] --> |OCP IPI| OCP[OCP & RHACM]
@@ -125,7 +137,7 @@ We are following the following OCP upgrade policy:
 
 #### Gitops procedure for upgrading OCP
 
-This is driven by an ACM Policy that applies the expected ClusterVesion Custom Resource. <Add link>
+This is driven by an ACM Policy that applies the expected ClusterVersion Custom Resource. <Add link>
 
 ### Upgrade - ACM
 
