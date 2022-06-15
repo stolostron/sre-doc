@@ -207,8 +207,25 @@ oc delete secret cluster-proxy-signer -n open-cluster-management
 
 ### Alerts and Alert Management
 
-TBD
+
+
+#### Prometheus
+
+References:
+
+- [https://awesome-prometheus-alerts.grep.to/](https://awesome-prometheus-alerts.grep.to/)
+- [https://sysdig.com/blog/getting-started-with-promql-cheatsheet/](https://sysdig.com/blog/getting-started-with-promql-cheatsheet/
+)
+
+Performance:
+
+- [https://cloud.redhat.com/blog/reinforcing-cerberus-guardian-of-openshift/kubernetes-clusters](https://cloud.redhat.com/blog/reinforcing-cerberus-guardian-of-openshift/kubernetes-clusters
+)
 
 ### Observability
 
-TBD
+#### SRE and Monitoring
+
+- [https://cloud.redhat.com/blog/monitoring-services-like-an-sre-in-openshift-servicemesh](https://cloud.redhat.com/blog/monitoring-services-like-an-sre-in-openshift-servicemesh)
+- [https://sre.google/sre-book/part-III-practices/](https://sre.google/sre-book/part-III-practices/)
+
