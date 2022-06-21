@@ -50,7 +50,7 @@ On top of that, we add a Public DNS zone containing:
 - record pointing to the public IP of the bastion VM
 - record pointing to the private IP of the Load Balancer frontend IPs for api and *.apps
 
-This is used for certificate validaiton purpose and to avoid the need to go through the bastion also for the DNS traffic.
+This is used for certificate validation purposes and to avoid the need to go through the bastion also for the DNS traffic.
 
 The expected domain name is:
 <api|*.apps>.<hubname>.<AOC base domain>
@@ -137,7 +137,7 @@ We are following the following OCP upgrade policy:
 
 #### Gitops procedure for upgrading OCP
 
-This is driven by an ACM Policy that applies the expected ClusterVersion Custom Resource. <Add link>
+This is driven by an [ACM Policy](https://github.com/andreadecorte/acm-aap-aas-operations/blob/main/cluster-bootstrap/openshift-config/base/policy-openshift-cluster-version.yaml) that applies the expected ClusterVersion Custom Resource. Once the manifest is applied, OCP will orchestrate the update until it finishes.
 
 ### Upgrade - ACM
 
@@ -212,3 +212,10 @@ TBD
 ### Observability
 
 TBD
+
+### Certificate management
+Certificates on the cluster are signed by Let's Encrypt CA for api and default ingress (*.apps).
+
+Certificates are handled by cert-manager which is configured to use DNS-01 challenge. This is the reason for having a [DNS Public Zone](#dns-setup).
+
+Certificates lasts 90 days and are automatically renewed every 30 days. An [ACM policy](https://github.com/stolostron/acm-aap-aas-operations/blob/main/cluster-bootstrap/cert-manager-config/base/certificateexpirationpolicy.yaml) monitors the certificate expiration and local cluster will pass to non-compliant status if there is any certificate which expire in less than 25 days.
