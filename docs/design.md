@@ -35,6 +35,8 @@ Preface: [https://www.redhat.com/en/blog/how-does-red-hat-support-day-2-operatio
 
 #### Commonality across all RHACM deployments
 
+TBD
+
 ### Planning - Sizing
 
 ### One ACM Hub / Bastion Host per Region
@@ -43,6 +45,7 @@ Preface: [https://www.redhat.com/en/blog/how-does-red-hat-support-day-2-operatio
 - The EMEA region will consist of Europe, Middle East, and Africa countries.
 
 ### DNS Setup
+
 #### Project: AOC
 The basic deployment of the OCP platform hosting the hub is private, including the DNS setup.
 
@@ -53,10 +56,19 @@ On top of that, we add a Public DNS zone containing:
 This is used for certificate validation purposes and to avoid the need to go through the bastion also for the DNS traffic.
 
 The expected domain name is:
+```
 <api|*.apps>.<hubname>.<AOC base domain>
+```
 where AOC base domain can be:
+
 - na.mgmtdev.ansiblecloud.com -> Development deployment in NA region
 - emea.mgmt.ansiblecloud.com -> Production deployment in EMEA region
+
+| Zones |
+|-------|
+| mgmtdev.ansiblecloud.com    |
+| na.mgmt.ansiblecloud.com    |
+| emea.mgmt.ansiblecloud.com  |
 
 ## Day 1 Operations
 
@@ -117,6 +129,16 @@ Currently, the import procedure follows the out of the box import procedure, usi
 
 An alternative import procedure is available, that uses a generic import payload to be applied on the AKS cluster, and a service account with minimal privledge. This requires the ACM hub to be configured to generate a generic payload. Using this procedure will simplify the import procedure by not having to access the ACM hub cluster during the import procedure. We would just need to access the target cluster. This alternative process will still be a Day 2 operation.
 
+### Cleaning Up Unknown Managed Clusters
+
+Today, most of the managed clusters that we see with `Unknown` states are clusters that have their managed applications deleted by customers.
+The current number has been manageable by manually detaching the clusters through the UI.
+
+To automate this task, we can follow this psuedo code:
+
+1. get the list of managed applications from the dynamic inventory
+2. get the list of managed clusters by their label, managed applications.
+3. the obsolete managed clusters will be the managed clusters with labels not in the dyanmic inventory list of managed applications.
 
 ### Backup and Restore | Disaster Recovery
 
@@ -214,6 +236,7 @@ TBD
 TBD
 
 ### Certificate management
+
 Certificates on the cluster are signed by Let's Encrypt CA for api and default ingress (*.apps).
 
 Certificates are handled by cert-manager which is configured to use DNS-01 challenge. This is the reason for having a [DNS Public Zone](#dns-setup).
