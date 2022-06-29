@@ -1,5 +1,27 @@
 # Fleet Health
 
+## Determine the Multiple Fleet Health
+
+When you focus on one Fleet, say the DEV fleet, it is easy to connect and walk through the console pages to determine the current state of the DEV fleet. Add in the production ACM1 fleet, and now its twice the cli commands, and twice the console page views.
+
+Let me record here the list of steps for manual visual inspection:
+
+1. enable sshuttle to acm1
+2. verify the ACM console shows the expected managed clusters
+3. verify the OBS dashboard shows the extected managed clusters
+4. verify policies have no violations
+5. verify argocd applications are all green
+6. verify the OCP version
+7. verify the ACM version
+8. enable sshuttle to acm5
+9. verify login through sso
+10. verify the ACM console has 1 managed cluster (local-cluster)
+11. verify that only 1 policy exists
+12. verify argocd is running, but doesn't have the users fix, need to be kube-admin to see applications
+13. verify cert-manager is not running, pending dns update, this application will be rolled out here
+14. verify OCP version 4.10.11
+15. verify ACM version 2.5.0
+
 ## Determining ACM Health
 
 - The Red Hat Advanced Cluster Management product is delivered as an Operator Hub based operator.
