@@ -1,0 +1,777 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<link href="../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.3.1, mkdocs-material-8.4.0" name="generator"/>
+<title>Design Decisions - sre-doc</title>
+<link href="../assets/stylesheets/main.69437709.min.css" rel="stylesheet"/>
+<link href="../assets/stylesheets/palette.cbb835fc.min.css" rel="stylesheet"/>
+<style>:root{--md-admonition-icon--alert:url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 17.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm-.25-8.25a.75.75 0 0 0-1.5 0v4.5a.75.75 0 0 0 1.5 0v-4.5z"/><path fill-rule="evenodd" d="M9.836 3.244c.963-1.665 3.365-1.665 4.328 0l8.967 15.504c.963 1.667-.24 3.752-2.165 3.752H3.034c-1.926 0-3.128-2.085-2.165-3.752L9.836 3.244zm3.03.751a1 1 0 0 0-1.732 0L2.168 19.499A1 1 0 0 0 3.034 21h17.932a1 1 0 0 0 .866-1.5L12.866 3.994z"/></svg>');--md-admonition-icon--note:url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3.5 3.75a.25.25 0 0 1 .25-.25h13.5a.25.25 0 0 1 .25.25v10a.75.75 0 0 0 1.5 0v-10A1.75 1.75 0 0 0 17.25 2H3.75A1.75 1.75 0 0 0 2 3.75v16.5c0 .966.784 1.75 1.75 1.75h7a.75.75 0 0 0 0-1.5h-7a.25.25 0 0 1-.25-.25V3.75z"/><path d="M6.25 7a.75.75 0 0 0 0 1.5h8.5a.75.75 0 0 0 0-1.5h-8.5zm-.75 4.75a.75.75 0 0 1 .75-.75h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1-.75-.75zm16.28 4.53a.75.75 0 1 0-1.06-1.06l-4.97 4.97-1.97-1.97a.75.75 0 1 0-1.06 1.06l2.5 2.5a.75.75 0 0 0 1.06 0l5.5-5.5z"/></svg>');--md-admonition-icon--abstract:url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M2.5 1.75a.25.25 0 0 1 .25-.25h8.5a.25.25 0 0 1 .25.25v7.736a.75.75 0 1 0 1.5 0V1.75A1.75 1.75 0 0 0 11.25 0h-8.5A1.75 1.75 0 0 0 1 1.75v11.5c0 .966.784 1.75 1.75 1.75h3.17a.75.75 0 0 0 0-1.5H2.75a.25.25 0 0 1-.25-.25V1.75zM4.75 4a.75.75 0 0 0 0 1.5h4.5a.75.75 0 0 0 0-1.5h-4.5zM4 7.75A.75.75 0 0 1 4.75 7h2a.75.75 0 0 1 0 1.5h-2A.75.75 0 0 1 4 7.75zm11.774 3.537a.75.75 0 0 0-1.048-1.074L10.7 14.145 9.281 12.72a.75.75 0 0 0-1.062 1.058l1.943 1.95a.75.75 0 0 0 1.055.008l4.557-4.45z"/></svg>');--md-admonition-icon--info:url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm6.5-.25A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75zM8 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/></svg>');--md-admonition-icon--tip:url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18.377 3.49c-1.862-.31-3.718.62-4.456 2.095-.428.857-.691 1.624-.728 2.361-.035.71.138 1.444.67 2.252.644.854 1.199 1.913 1.608 3.346a.75.75 0 1 1-1.442.412c-.353-1.236-.82-2.135-1.372-2.865l-.008-.01c-.53-.698-1.14-1.242-1.807-1.778a50.724 50.724 0 0 0-.667-.524C9.024 7.884 7.71 6.863 6.471 5.16c-.59.287-1.248.798-1.806 1.454-.665.78-1.097 1.66-1.158 2.446.246.36.685.61 1.246.715.643.12 1.278.015 1.633-.182a.75.75 0 1 1 .728 1.311c-.723.402-1.728.516-2.637.346-.916-.172-1.898-.667-2.398-1.666L2 9.427V9.25c0-1.323.678-2.615 1.523-3.607.7-.824 1.59-1.528 2.477-1.917V2.75a.75.75 0 1 1 1.5 0v1.27c1.154 1.67 2.363 2.612 3.568 3.551.207.162.415.323.621.489.001-.063.003-.126.006-.188.052-1.034.414-2.017.884-2.958 1.06-2.118 3.594-3.313 6.044-2.904 1.225.204 2.329.795 3.125 1.748C22.546 4.713 23 5.988 23 7.5c0 1.496-.913 3.255-2.688 3.652.838 1.699 1.438 3.768 1.181 5.697-.269 2.017-1.04 3.615-2.582 4.675C17.409 22.558 15.288 23 12.5 23H4.75a.75.75 0 0 1 0-1.5h2.322c-.58-.701-.998-1.578-1.223-2.471-.327-1.3-.297-2.786.265-4.131-.92.091-1.985-.02-3.126-.445a.75.75 0 1 1 .524-1.406c1.964.733 3.428.266 4.045-.19.068-.06.137-.12.208-.18a.745.745 0 0 1 .861-.076.746.746 0 0 1 .32.368.752.752 0 0 1-.173.819c-.077.076-.16.15-.252.221-1.322 1.234-1.62 3.055-1.218 4.654.438 1.737 1.574 2.833 2.69 2.837H12.5c2.674 0 4.429-.433 5.56-1.212 1.094-.752 1.715-1.904 1.946-3.637.236-1.768-.445-3.845-1.407-5.529a.576.576 0 0 1-.012-.02 3.557 3.557 0 0 1-1.553-.94c-.556-.565-.89-1.243-1.012-1.73a.75.75 0 0 1 1.456-.364c.057.231.26.67.626 1.043.35.357.822.623 1.443.623 1.172 0 1.953-1.058 1.953-2.234 0-1.205-.357-2.127-.903-2.78-.547-.654-1.318-1.08-2.22-1.23z"/></svg>');--md-admonition-icon--success:url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 0 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0z"/></svg>');--md-admonition-icon--question:url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm9 3a1 1 0 1 1-2 0 1 1 0 0 1 2 0zM6.92 6.085c.081-.16.19-.299.34-.398.145-.097.371-.187.74-.187.28 0 .553.087.738.225A.613.613 0 0 1 9 6.25c0 .177-.04.264-.077.318a.956.956 0 0 1-.277.245c-.076.051-.158.1-.258.161l-.007.004a7.728 7.728 0 0 0-.313.195 2.416 2.416 0 0 0-.692.661.75.75 0 0 0 1.248.832.956.956 0 0 1 .276-.245 6.3 6.3 0 0 1 .26-.16l.006-.004c.093-.057.204-.123.313-.195.222-.149.487-.355.692-.662.214-.32.329-.702.329-1.15 0-.76-.36-1.348-.863-1.725A2.76 2.76 0 0 0 8 4c-.631 0-1.155.16-1.572.438-.413.276-.68.638-.849.977a.75.75 0 1 0 1.342.67z"/></svg>');--md-admonition-icon--warning:url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.22 1.754a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368L8.22 1.754zm-1.763-.707c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575L6.457 1.047zM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm-.25-5.25a.75.75 0 0 0-1.5 0v2.5a.75.75 0 0 0 1.5 0v-2.5z"/></svg>');--md-admonition-icon--failure:url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M3.404 12.596a6.5 6.5 0 1 1 9.192-9.192 6.5 6.5 0 0 1-9.192 9.192zM2.344 2.343a8 8 0 1 0 11.313 11.314A8 8 0 0 0 2.343 2.343zM6.03 4.97a.75.75 0 0 0-1.06 1.06L6.94 8 4.97 9.97a.75.75 0 1 0 1.06 1.06L8 9.06l1.97 1.97a.75.75 0 1 0 1.06-1.06L9.06 8l1.97-1.97a.75.75 0 1 0-1.06-1.06L8 6.94 6.03 4.97z"/></svg>');--md-admonition-icon--danger:url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M10.561 1.5a.016.016 0 0 0-.01.004L3.286 8.571A.25.25 0 0 0 3.462 9H6.75a.75.75 0 0 1 .694 1.034l-1.713 4.188 6.982-6.793A.25.25 0 0 0 12.538 7H9.25a.75.75 0 0 1-.683-1.06l2.008-4.418.003-.006a.02.02 0 0 0-.004-.009.02.02 0 0 0-.006-.006L10.56 1.5zM9.504.43a1.516 1.516 0 0 1 2.437 1.713L10.415 5.5h2.123c1.57 0 2.346 1.909 1.22 3.004l-7.34 7.142a1.25 1.25 0 0 1-.871.354h-.302a1.25 1.25 0 0 1-1.157-1.723L5.633 10.5H3.462c-1.57 0-2.346-1.909-1.22-3.004L9.503.429z"/></svg>');--md-admonition-icon--bug:url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.72.22a.75.75 0 0 1 1.06 0l1 .999a3.492 3.492 0 0 1 2.441 0l.999-1a.75.75 0 1 1 1.06 1.061l-.775.776c.616.63.995 1.493.995 2.444v.327c0 .1-.009.197-.025.292.408.14.764.392 1.029.722l1.968-.787a.75.75 0 0 1 .556 1.392L13 7.258V9h2.25a.75.75 0 0 1 0 1.5H13v.5c0 .409-.049.806-.141 1.186l2.17.868a.75.75 0 0 1-.557 1.392l-2.184-.873A4.997 4.997 0 0 1 8 16a4.997 4.997 0 0 1-4.288-2.427l-2.183.873a.75.75 0 0 1-.558-1.392l2.17-.868A5.013 5.013 0 0 1 3 11v-.5H.75a.75.75 0 0 1 0-1.5H3V7.258L.971 6.446a.75.75 0 0 1 .558-1.392l1.967.787c.265-.33.62-.583 1.03-.722a1.684 1.684 0 0 1-.026-.292V4.5c0-.951.38-1.814.995-2.444L4.72 1.28a.75.75 0 0 1 0-1.06zM6.173 5h3.654A.173.173 0 0 0 10 4.827V4.5a2 2 0 1 0-4 0v.327c0 .096.077.173.173.173zM5.25 6.5a.75.75 0 0 0-.75.75V11a3.5 3.5 0 1 0 7 0V7.25a.75.75 0 0 0-.75-.75h-5.5z"/></svg>');--md-admonition-icon--example:url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M5 5.782V2.5h-.25a.75.75 0 0 1 0-1.5h6.5a.75.75 0 0 1 0 1.5H11v3.282l3.666 5.76C15.619 13.04 14.543 15 12.767 15H3.233c-1.776 0-2.852-1.96-1.899-3.458L5 5.782zM9.5 2.5h-3V6a.75.75 0 0 1-.117.403L4.73 9h6.54L9.617 6.403A.75.75 0 0 1 9.5 6V2.5zm-6.9 9.847L3.775 10.5h8.45l1.175 1.847a.75.75 0 0 1-.633 1.153H3.233a.75.75 0 0 1-.633-1.153z"/></svg>');--md-admonition-icon--quote:url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.75 2.5a.75.75 0 0 0 0 1.5h10.5a.75.75 0 0 0 0-1.5H1.75zm4 5a.75.75 0 0 0 0 1.5h8.5a.75.75 0 0 0 0-1.5h-8.5zm0 5a.75.75 0 0 0 0 1.5h8.5a.75.75 0 0 0 0-1.5h-8.5zM2.5 7.75a.75.75 0 0 0-1.5 0v6a.75.75 0 0 0 1.5 0v-6z"/></svg>');}</style>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body data-md-color-accent="none" data-md-color-primary="none" data-md-color-scheme="" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#day-0-operations">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="sre-doc" class="md-header__button md-logo" data-md-component="logo" href=".." title="sre-doc">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            sre-doc
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Design Decisions
+            
+          </span>
+</div>
+</div>
+</div>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"></path></svg>
+</button>
+</nav>
+<div class="md-search__suggest" data-md-component="search-suggest"></div>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="md-header__source">
+<a class="md-source" data-md-component="source" href="https://github.com/stolostron/sre-doc" title="Go to repository">
+<div class="md-source__icon md-icon">
+<svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"></path></svg>
+</div>
+<div class="md-source__repository">
+    stolostron/sre-doc
+  </div>
+</a>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<nav aria-label="Tabs" class="md-tabs" data-md-component="tabs">
+<div class="md-tabs__inner md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="..">
+      Welcome to ACM SRE
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link md-tabs__link--active" href="./">
+      Design Decisions
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../fleet-health/">
+      Fleet Health
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../operations/">
+      Operations
+    </a>
+</li>
+</ul>
+</div>
+</nav>
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary md-nav--lifted" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="sre-doc" class="md-nav__button md-logo" data-md-component="logo" href=".." title="sre-doc">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"></path></svg>
+</a>
+    sre-doc
+  </label>
+<div class="md-nav__source">
+<a class="md-source" data-md-component="source" href="https://github.com/stolostron/sre-doc" title="Go to repository">
+<div class="md-source__icon md-icon">
+<svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"></path></svg>
+</div>
+<div class="md-source__repository">
+    stolostron/sre-doc
+  </div>
+</a>
+</div>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="..">
+        Welcome to ACM SRE
+      </a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" data-md-toggle="toc" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+          Design Decisions
+          <span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+        Design Decisions
+      </a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#day-0-operations">
+    Day 0 Operations
+  </a>
+<nav aria-label="Day 0 Operations" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#planning-how-do-we-do-ops">
+    Planning - How do we do Ops
+  </a>
+<nav aria-label="Planning - How do we do Ops" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#project-aoc">
+    Project: AOC
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#project-kcp">
+    Project: KCP
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#commonality-across-all-rhacm-deployments">
+    Commonality across all RHACM deployments
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#planning-sizing">
+    Planning - Sizing
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#one-acm-hub-bastion-host-per-region">
+    One ACM Hub / Bastion Host per Region
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#dns-setup">
+    DNS Setup
+  </a>
+<nav aria-label="DNS Setup" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#project-aoc_1">
+    Project: AOC
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#day-1-operations">
+    Day 1 Operations
+  </a>
+<nav aria-label="Day 1 Operations" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#new-environment-deployments">
+    New Environment Deployments
+  </a>
+<nav aria-label="New Environment Deployments" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#project-aoc_2">
+    Project: AOC
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#project-kcp_1">
+    Project: KCP
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#day-2-operations">
+    Day 2 Operations
+  </a>
+<nav aria-label="Day 2 Operations" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#importing-aks-clusters">
+    Importing AKS Clusters
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#cleaning-up-unknown-managed-clusters">
+    Cleaning Up Unknown Managed Clusters
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#backup-and-restore-disaster-recovery">
+    Backup and Restore | Disaster Recovery
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#upgrade-ocp">
+    Upgrade - OCP
+  </a>
+<nav aria-label="Upgrade - OCP" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#gitops-procedure-for-upgrading-ocp">
+    Gitops procedure for upgrading OCP
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#upgrade-acm">
+    Upgrade - ACM
+  </a>
+<nav aria-label="Upgrade - ACM" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#gitops-procedure-for-upgrading-rhacm-24-to-rhacm-25">
+    Gitops procedure for upgrading RHACM 2.4 to RHACM 2.5
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#alerts-and-alert-management">
+    Alerts and Alert Management
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#observability">
+    Observability
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#certificate-management">
+    Certificate management
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../fleet-health/">
+        Fleet Health
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../operations/">
+        Operations
+      </a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#day-0-operations">
+    Day 0 Operations
+  </a>
+<nav aria-label="Day 0 Operations" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#planning-how-do-we-do-ops">
+    Planning - How do we do Ops
+  </a>
+<nav aria-label="Planning - How do we do Ops" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#project-aoc">
+    Project: AOC
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#project-kcp">
+    Project: KCP
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#commonality-across-all-rhacm-deployments">
+    Commonality across all RHACM deployments
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#planning-sizing">
+    Planning - Sizing
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#one-acm-hub-bastion-host-per-region">
+    One ACM Hub / Bastion Host per Region
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#dns-setup">
+    DNS Setup
+  </a>
+<nav aria-label="DNS Setup" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#project-aoc_1">
+    Project: AOC
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#day-1-operations">
+    Day 1 Operations
+  </a>
+<nav aria-label="Day 1 Operations" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#new-environment-deployments">
+    New Environment Deployments
+  </a>
+<nav aria-label="New Environment Deployments" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#project-aoc_2">
+    Project: AOC
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#project-kcp_1">
+    Project: KCP
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#day-2-operations">
+    Day 2 Operations
+  </a>
+<nav aria-label="Day 2 Operations" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#importing-aks-clusters">
+    Importing AKS Clusters
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#cleaning-up-unknown-managed-clusters">
+    Cleaning Up Unknown Managed Clusters
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#backup-and-restore-disaster-recovery">
+    Backup and Restore | Disaster Recovery
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#upgrade-ocp">
+    Upgrade - OCP
+  </a>
+<nav aria-label="Upgrade - OCP" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#gitops-procedure-for-upgrading-ocp">
+    Gitops procedure for upgrading OCP
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#upgrade-acm">
+    Upgrade - ACM
+  </a>
+<nav aria-label="Upgrade - ACM" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#gitops-procedure-for-upgrading-rhacm-24-to-rhacm-25">
+    Gitops procedure for upgrading RHACM 2.4 to RHACM 2.5
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#alerts-and-alert-management">
+    Alerts and Alert Management
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#observability">
+    Observability
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#certificate-management">
+    Certificate management
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<a class="md-content__button md-icon" href="https://github.com/stolostron/sre-doc/edit/main/docs/design.md" title="Edit this page">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"></path></svg>
+</a>
+<h1 id="design-decisions">Design Decisions</h1>
+<p>Preface: <a href="https://www.redhat.com/en/blog/how-does-red-hat-support-day-2-operations">https://www.redhat.com/en/blog/how-does-red-hat-support-day-2-operations</a></p>
+<h2 id="day-0-operations">Day 0 Operations</h2>
+<h3 id="planning-how-do-we-do-ops">Planning - How do we do Ops</h3>
+<h4 id="project-aoc">Project: AOC</h4>
+<ul>
+<li>We use a multiple github repository to allow us to deploy and operate RHACM.</li>
+<li>For application and configuration data, we define kustomization overlays to cover each distinct deployment targets. Targets make up different stage environments or different region environments.</li>
+<li>We use Ansible Automation Platform to trigger Ansible Playbooks to build the infrastructure that make up the management components. This includes the ansible playbook to deploy OCP as a private cluster on Azure. We also define ansible playbooks to import AKS clusters into ACM. We need to support multiple ACM deployments across multiple regions.</li>
+<li>To limit costs, We support a two stage deployment workflow: development and production. Developers are still able to deploy sandbox environments, using an internal RHACM infrastructure cluster, with has support for cluster pools.</li>
+<li>We develop in the cloud.</li>
+<li>For the AOC project we use gitops with Openshift Gitops to deploy RHACM workload and configuration data. The image below is a sample the current set of ArgoCD applications we have defined.</li>
+</ul>
+<p><a href="../images/acm_24_argocd_applications.png"><img alt="Image 0" src="https://stolostron.github.io/sre-doc/images/acm_24_argocd_applications.png"/></a></p>
+<h4 id="project-kcp">Project: KCP</h4>
+<ul>
+<li>The source of the configuration for this cluster is held in the <a href="https://github.com/stolostron/openshift-pipelines/tree/main/kcp-sgs-pipelines">Openshift-pipelines</a> repository, directly in the <code>kcp-sgs-pipelines</code> directory. The source for <a href="https://github.com/stolostron/openshift-pipelines/tree/main/autoscale-hypershift">autoscale hypershift</a> is also held in this repository in the <code>autoscale-hypershift</code> directory.</li>
+<li>This project leverages an existing RHACM infrastructure to deploy the public OCP clusters into which we will deploy the RHACM instance to support the project. The initial OCP clusters are detached from the infrastrucutre RHACM.</li>
+<li>The deployment of RHACM into OCP clusters will be managed by Openshift Pipelines.</li>
+<li>Openshift Pipeline will deploy Openshift Gitops, and similar to the AOC project, we will use Argocd to handle the rollout of ACM, the ACM configuration, the Singapore controller, and cluster registration controller.</li>
+<li>Once RHACM is successfully installed, the pipeline will configure HyperShift on the local cluster, converting the local cluster managedcluster into a HyperShift Hosting Cluster.</li>
+<li>The KCP cluster will be configured with 3 HyperShiftDeployments on its localcluster hosting cluster, 1 Azure and 1 AWS HyperShiftDeployment are configured to target KCP Stable, whereas the last AWS HyperShiftDeployment is configured to target KCP unstable.</li>
+<li>Autoscale HyperShift is deployed on this cluster as well, to ensure that HyperShiftDeployments are scaled up/down automatically on a preexisting schedule to aid in cost savings efforts. As of now, HyperShiftDeployments will scale down every Friday at Midnight, and scale up every Monday at 1 AM.<ul>
+<li>A label of <code>autoscale-hypershift=skip</code> can be added to the HyperShiftDeployment to ensure it is not affected by the automated scaling</li>
+<li>When scaling down, autoscaling is turned off and the replicaCount is set to 1</li>
+<li>When scaling up, autoscaling is turned on and the minimum replicas is set to 2 and max to 5</li>
+</ul>
+</li>
+<li>Observability is installed on this cluster and AlertManager is configured to forward warning and critical alerts to slack and GitHub. PagerDuty will alert on critical alerts as well.
+<img alt="Observability Dashboard(https://stolostron.github.io/sre-doc/images/kcp_dashboard_screenshot.png)" src="../images/kcp_dashboard_screenshot.png"/></li>
+</ul>
+<h4 id="commonality-across-all-rhacm-deployments">Commonality across all RHACM deployments</h4>
+<p>TBD</p>
+<h3 id="planning-sizing">Planning - Sizing</h3>
+<h3 id="one-acm-hub-bastion-host-per-region">One ACM Hub / Bastion Host per Region</h3>
+<ul>
+<li>Currently, we support AKS cluster deployed across the NA region. A single ACM hub cluster will be available to import and manage all the AKS clusters in the North America region.</li>
+<li>The EMEA region will consist of Europe, Middle East, and Africa countries.</li>
+</ul>
+<h3 id="dns-setup">DNS Setup</h3>
+<h4 id="project-aoc_1">Project: AOC</h4>
+<p>The basic deployment of the OCP platform hosting the hub is private, including the DNS setup.</p>
+<p>On top of that, we add a Public DNS zone containing:
+- record pointing to the public IP of the bastion VM
+- record pointing to the private IP of the Load Balancer frontend IPs for api and *.apps</p>
+<p>This is used for certificate validation purposes and to avoid the need to go through the bastion also for the DNS traffic.</p>
+<p>The expected domain name is:
+<div class="highlight"><pre><span></span><code>&lt;api|*.apps&gt;.&lt;hubname&gt;.&lt;AOC base domain&gt;
+</code></pre></div>
+where AOC base domain can be:</p>
+<ul>
+<li>na.mgmtdev.ansiblecloud.com -&gt; Development deployment in NA region</li>
+<li>emea.mgmt.ansiblecloud.com -&gt; Production deployment in EMEA region</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Zones</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mgmtdev.ansiblecloud.com</td>
+</tr>
+<tr>
+<td>na.mgmt.ansiblecloud.com</td>
+</tr>
+<tr>
+<td>emea.mgmt.ansiblecloud.com</td>
+</tr>
+</tbody>
+</table>
+<h2 id="day-1-operations">Day 1 Operations</h2>
+<h3 id="new-environment-deployments">New Environment Deployments</h3>
+<ul>
+<li>The Ansible project <a href="https://github.com/rcarrata/ocp4-azure-ipi">ocp4-azure-ipi</a> was <a href="https://github.com/stolostron/ocp4-azure-ipi">forked</a> and is used to deploy OCP clusters. Red Hat Ansibile Automation Platform is used to perform the Day 1 deployment of the Openshift Clusters.</li>
+<li>A series of Ansible playbooks from <a href="https://github.com/stolostron/acm-aap-aas-operations">acm-aap-aas-operations</a> are used to:</li>
+<li>configure the Bastion VM</li>
+<li>setup Public DNS configuration</li>
+<li>bootstrap the Openshift Gitops. Openshift Gitops handles rolling out and maintain the set of application and configuration to the ACM hub cluster, or local cluster.</li>
+<li>ACM policy is used for maintain configuration across the fleet of managed clusters.</li>
+</ul>
+<h4 id="project-aoc_2">Project: AOC</h4>
+<div class="mermaid">graph LR
+    AAP --&gt; |OCP IPI| OCP
+    AAP --&gt; |Bastion/DNS setup| OCP[OCP &amp; RHACM]
+    AAP --&gt; |Openshift GitOps| OCP[OCP &amp; RHACM]
+    OCP --&gt; |ArgoCD - Application &amp; Configuration| OCP
+    OCP --&gt; |Policy| FLEET
+</div>
+<h4 id="project-kcp_1">Project: KCP</h4>
+<div class="mermaid">graph LR
+    RHACM[RHACM*] --&gt; |OCP IPI| OCP[OCP &amp; RHACM]
+    PIPELINE --&gt; |Openshift GitOps| OCP
+    OCP --&gt; |ArgoCD - Application &amp; Configuration| OCP
+    OCP --&gt; |Policy| FLEET
+</div>
+<h2 id="day-2-operations">Day 2 Operations</h2>
+<h3 id="importing-aks-clusters">Importing AKS Clusters</h3>
+<p>AKS clusters are imported into the ACM hub as a Day 2 operation using an ansible playbook.
+The playbook is idempotent and runs against an inventory of AKS clusters. The inventory is dyanmic, where targets can be added and removed. In this way, a single playbook can be used against inventories from different stages--dev and production, or different regions.</p>
+<p>The following tasks are performed on each cluster:</p>
+<ol>
+<li>Setup networking to allow the AKS cluster to access the ACM k8s endpoint.</li>
+<li>Setup networking to allow the AAP cluster to access the AKS k8s endpoint.</li>
+<li>Generate the ManageCluster CR on the ACM hub.</li>
+<li>Read and apply the generated import secret on the AKS cluster.</li>
+</ol>
+<div class="admonition reference">
+<p class="admonition-title">Reference</p>
+<p>See details at <a href="https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.5/html/clusters/managing-your-clusters#importing-a-managed-cluster-with-the-cli">1.8.2. Importing a managed cluster with the CLI</a></p>
+</div>
+<p>As new AKS clusters come online, the ansible playbook running on a schedule will iterate over the inventory of clusters and import the clusters into ACM. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If it takes 5m to run the import playbook from start to end for a single AKS cluster, then iterating over 100 AKS clusters, will take 500m or 8.3 hours, as a rough estimate. Enabling parallism will reduce the total time.</p>
+</div>
+<p>Currently, the import procedure follows the out of the box import procedure, using a Service Account with cluster-admin rolebinding to generate the managed cluster namespace, and create the Managed Cluster CR. The best practice is always to use the mininal privilege as possible, so we question, if customers in general are ok with using a cluster-admin role to import all their clusters.</p>
+<p>An alternative import procedure is available, that uses a generic import payload to be applied on the AKS cluster, and a service account with minimal privledge. This requires the ACM hub to be configured to generate a generic payload. Using this procedure will simplify the import procedure by not having to access the ACM hub cluster during the import procedure. We would just need to access the target cluster. This alternative process will still be a Day 2 operation.</p>
+<h3 id="cleaning-up-unknown-managed-clusters">Cleaning Up Unknown Managed Clusters</h3>
+<p>Today, most of the managed clusters that we see with <code>Unknown</code> states are clusters that have their managed applications deleted by customers.
+The current number has been manageable by manually detaching the clusters through the UI.</p>
+<p>To automate this task, we can follow this psuedo code:</p>
+<ol>
+<li>get the list of managed applications from the dynamic inventory</li>
+<li>get the list of managed clusters by their label, managed applications.</li>
+<li>the obsolete managed clusters will be the managed clusters with labels not in the dyanmic inventory list of managed applications.</li>
+</ol>
+<h3 id="backup-and-restore-disaster-recovery">Backup and Restore | Disaster Recovery</h3>
+<p>TBD</p>
+<h3 id="upgrade-ocp">Upgrade - OCP</h3>
+<p>We are following the following OCP upgrade policy:</p>
+<ul>
+<li>The ACM SRE maintenance window is between Sunday night (CST) and Wednesday morning (CST).</li>
+<li>We are following OpenShift <strong>stable</strong> upgrade channel</li>
+<li>OCP minor version release upgrades will happen during this window. <ul>
+<li>We will deploy the latest version, weekly.</li>
+</ul>
+</li>
+<li>OCP major version release upgrades will happen during this window.<ul>
+<li>We will upgrade to the next release, 1 week after it is available.</li>
+</ul>
+</li>
+<li>Development stage is upgraded first.</li>
+<li>Production(s) stage is upgraded next.</li>
+</ul>
+<h4 id="gitops-procedure-for-upgrading-ocp">Gitops procedure for upgrading OCP</h4>
+<p>This is driven by an <a href="https://github.com/andreadecorte/acm-aap-aas-operations/blob/main/cluster-bootstrap/openshift-config/base/policy-openshift-cluster-version.yaml">ACM Policy</a> that applies the expected ClusterVersion Custom Resource. Once the manifest is applied, OCP will orchestrate the update until it finishes.</p>
+<h3 id="upgrade-acm">Upgrade - ACM</h3>
+<ul>
+<li>The upgrade of RHACM will happen during the upgrade maintenance window from Sunday night (CST) to Wedneday morning (CST). This allows us to provide business hour support across the maintenance windown.</li>
+<li>We will upgrade ACM on the maintenance window following the release of RHACM.</li>
+<li>Development stage is upgraded first.</li>
+<li>Production(s) stage is upgraded next.</li>
+</ul>
+<h4 id="gitops-procedure-for-upgrading-rhacm-24-to-rhacm-25">Gitops procedure for upgrading RHACM 2.4 to RHACM 2.5</h4>
+<p>There is a known blocker <a href="https://bugzilla.redhat.com/show_bug.cgi?id=2095195">issue</a> for upgrading RHACM from 2.4 to 2.5 when the cluster proxy addon is enabled. Before upgrading from 2.4 to 2.5 we also need to disable the backup feature. </p>
+<p>The following steps includes the workaround to allow the upgrade with Gitops.</p>
+<ol>
+<li>Create PR update MultiClusterHub CR to disable proxy addon
+<div class="highlight"><pre><span></span><code><span class="nt">spec</span><span class="p">:</span><span class="w"></span>
+<span class="w"> </span><span class="nt">enableClusterProxyAddon</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
+</code></pre></div></li>
+<li>Create PR to update ACM subscription
+<div class="highlight"><pre><span></span><code><span class="nt">spec</span><span class="p">:</span><span class="w"></span>
+<span class="w"> </span><span class="nt">channel</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">release-2.5</span><span class="w"></span>
+<span class="w"> </span><span class="nt">installPlanApproval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Manual</span><span class="w"></span>
+<span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">advanced-cluster-management</span><span class="w"></span>
+<span class="w"> </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redhat-operators</span><span class="w"></span>
+<span class="w"> </span><span class="nt">sourceNamespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openshift-marketplace</span><span class="w"></span>
+</code></pre></div></li>
+<li>Login to the OCP console to review and approve the install plan for release 2.5 upgrade.</li>
+<li>After the RHACM 2.5 upgrade completes successfully, create PR to update MultiClusterHub CR to re-enable the cluster proxy addon.
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">operator.open-cluster-management.io/v1</span><span class="w"></span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MultiClusterHub</span><span class="w"></span>
+<span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">multiclusterhub</span><span class="w"></span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">open-cluster-management</span><span class="w"></span>
+<span class="nt">spec</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">overrides</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">components</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cluster-proxy-addon</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">   </span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">multiclusterhub-repo</span><span class="w">  </span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">   </span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">search</span><span class="w">    </span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">   </span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">management-ingress</span><span class="w">    </span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">   </span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">console</span><span class="w">   </span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">   </span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">insights</span><span class="w">  </span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">   </span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grc</span><span class="w">   </span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">   </span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cluster-lifecycle</span><span class="w"> </span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">   </span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">volsync</span><span class="w">   </span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">   </span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">multicluster-engine</span><span class="w">   </span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">  </span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cluster-backup</span><span class="w"></span>
+</code></pre></div></li>
+<li>Manually delete the secret cluster-proxy-signer and let cluster-proxy-addon-manager to refresh it. 
+<div class="highlight"><pre><span></span><code>oc delete secret cluster-proxy-signer -n open-cluster-management
+</code></pre></div></li>
+</ol>
+<h3 id="alerts-and-alert-management">Alerts and Alert Management</h3>
+<p>TBD</p>
+<h3 id="observability">Observability</h3>
+<p>TBD</p>
+<h3 id="certificate-management">Certificate management</h3>
+<p>Certificates on the cluster are signed by Let's Encrypt CA for api and default ingress (*.apps).</p>
+<p>Certificates are handled by cert-manager which is configured to use DNS-01 challenge. This is the reason for having a <a href="#dns-setup">DNS Public Zone</a>.</p>
+<p>Certificates lasts 90 days and are automatically renewed every 30 days. An <a href="https://github.com/stolostron/acm-aap-aas-operations/blob/main/cluster-bootstrap/cert-manager-config/base/certificateexpirationpolicy.yaml">ACM policy</a> monitors the certificate expiration and local cluster will pass to non-compliant status if there is any certificate which expire in less than 25 days.</p>
+</article>
+</div>
+</div>
+</main>
+<footer class="md-footer">
+<nav aria-label="Footer" class="md-footer__inner md-grid">
+<a aria-label="Previous: Welcome to ACM SRE" class="md-footer__link md-footer__link--prev" href=".." rel="prev">
+<div class="md-footer__button md-icon">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"></path></svg>
+</div>
+<div class="md-footer__title">
+<div class="md-ellipsis">
+<span class="md-footer__direction">
+                Previous
+              </span>
+              Welcome to ACM SRE
+            </div>
+</div>
+</a>
+<a aria-label="Next: Fleet Health" class="md-footer__link md-footer__link--next" href="../fleet-health/" rel="next">
+<div class="md-footer__title">
+<div class="md-ellipsis">
+<span class="md-footer__direction">
+                Next
+              </span>
+              Fleet Health
+            </div>
+</div>
+<div class="md-footer__button md-icon">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"></path></svg>
+</div>
+</a>
+</nav>
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "navigation.indexes", "content.code.annotate", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.ecf98df9.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+<script src="../assets/javascripts/bundle.9c69f0bc.min.js"></script>
+<script src="https://unpkg.com/mermaid@8.8.0/dist/mermaid.min.js"></script><script>mermaid.initialize({});</script></body>
+</html>
